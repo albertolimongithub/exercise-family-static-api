@@ -11,14 +11,14 @@ from random import randint
 class FamilyStructure:
     def __init__(self, last_name):
         self.last_name = last_name
-        self.id = 1
+        self._next_id = 1
         # example list of members
         self._members = []
 
     # read-only: Use this method to generate random members ID's when adding members into the list
     def _generateId(self):
-        new_id = self.id
-        self.id += 1
+        new_id = self._next_id
+        self._next_id += 1
         return new_id
 
     def add_member(self, member):
@@ -47,7 +47,8 @@ class FamilyStructure:
         return False
 
     def get_member(self, id):
-        # fill this method and update the return
+        ## you have to implement this method
+        ## loop all the members and return the one with the given id
         for member in self._members:
             if member["id"] == id:
                 return member

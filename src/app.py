@@ -56,13 +56,33 @@ def sitemap():
 def get_member_list():
 
     members = jackson_family.get_all_members()
+   
     return jsonify(members), 200
     
 #### GET 1 MEMBER
-@app.route('/member/<int:id>',methods=['GET'])
-def get_single_member(id):
+@app.route('/member/<int:id>', methods=['GET'])
+def get_one_member(id):
+
+    try:
+        jackson_family
+    except NameError:
+        return jsonify({"error" : "Namerror"}), 500
+
     member = jackson_family.get_member(id)
-    return jsonify(member), 200
+
+    if member:
+        print("-------------------------------------------------------------",member)
+        response_body = {
+            "family_member": member
+        }
+        
+        return jsonify({"name":f"{member['first_name']} {member['last_name']}",
+                        "age": member['age'],
+                        "id" : member['id'],
+                        "lucky_numbers": member['lucky_numbers']
+                        }), 200
+    else:
+        return jsonify({"error": "Member not found"}), 404
     
 
 #### POST
@@ -87,14 +107,12 @@ def handle_delete_member(id):
     deleted_member = jackson_family.get_member(id)
 
     if deleted_member :
+
         jackson_family.delete_member(id)
-        response_body = {"message": f"Member deleted: {deleted_member}"}
-
-        return jsonify(response_body), 200
+        return jsonify({"done": True}), 200
+       
     else:
-        response_body = {"message": "Member not found"}
-
-        return jsonify(response_body), 404
+        return jsonify({"message": "Member not found"}), 404
     
 
 #### PUT 
